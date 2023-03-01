@@ -1,0 +1,95 @@
+const int xPin = A0;
+const int yPin = A1;
+
+const int center = 12;
+const int up = 8;
+const int left = 10;
+const int right = 11;
+const int down = 9;
+
+void setup() {
+  Serial.begin(9600);
+
+  // set input and output pins
+  pinMode(xPin,INPUT);
+  pinMode(yPin,INPUT);
+
+  pinMode(up, OUTPUT);
+  pinMode(left, OUTPUT);
+  pinMode(right, OUTPUT);
+  pinMode(down, OUTPUT);
+  pinMode(center, OUTPUT);
+
+}
+
+void loop() {
+  //Read in joystick values for x and y direction
+  int xValue = analogRead(xPin);
+  int yValue = analogRead(yPin);
+
+  //convert the analog input to number between 0-3
+  int x = map(xValue, 0, 1023, 0, 3);
+  int y = map(yValue, 0, 1023, 0, 3);
+
+  //Print out the converted x and y positions
+  Serial.print("x: ");
+  Serial.print(x);
+  Serial.print(" y: ");
+  Serial.println(y);
+
+  if(x == 1 && y == 1){ //Center position
+    digitalWrite(center, HIGH);
+    digitalWrite(up, LOW);
+    digitalWrite(left, LOW);
+    digitalWrite(right, LOW);
+    digitalWrite(down, LOW);
+  }else if(x == 3 && y == 1){ //Up position
+    digitalWrite(center, LOW);
+    digitalWrite(up, HIGH);
+    digitalWrite(left, LOW);
+    digitalWrite(right, LOW);
+    digitalWrite(down, LOW);
+  }else if(x == 0 && y == 1){//Down position
+    digitalWrite(center, LOW);
+    digitalWrite(up, LOW);
+    digitalWrite(left, LOW);
+    digitalWrite(right, LOW);
+    digitalWrite(down, HIGH);
+  }else if(x == 1 && y == 0){ //Left position
+    digitalWrite(center, LOW);
+    digitalWrite(up, LOW);
+    digitalWrite(left, HIGH);
+    digitalWrite(right, LOW);
+    digitalWrite(down, LOW);
+  }else if(x == 1 && y == 3){//Right Position
+    digitalWrite(center, LOW);
+    digitalWrite(up, LOW);
+    digitalWrite(left, LOW);
+    digitalWrite(right, HIGH);
+    digitalWrite(down, LOW);
+  }else if(x == 3 && y == 0){//Up-Left Position
+    digitalWrite(center, LOW);
+    digitalWrite(up, HIGH);
+    digitalWrite(left, HIGH);
+    digitalWrite(right, LOW);
+    digitalWrite(down, LOW);
+  }else if(x == 3 && y == 3){//Up-Right Position
+    digitalWrite(center, LOW);
+    digitalWrite(up, HIGH);
+    digitalWrite(left, LOW);
+    digitalWrite(right, HIGH);
+    digitalWrite(down, LOW);
+  }else if(x == 0 && y == 0){//Down-Left Position
+    digitalWrite(center, LOW);
+    digitalWrite(up, LOW);
+    digitalWrite(left, HIGH);
+    digitalWrite(right, LOW);
+    digitalWrite(down, HIGH);
+  }else if(x == 0 && y == 3){//Down-Right Position
+    digitalWrite(center, LOW);
+    digitalWrite(up, LOW);
+    digitalWrite(left, LOW);
+    digitalWrite(right, HIGH);
+    digitalWrite(down, HIGH);
+  }
+}
