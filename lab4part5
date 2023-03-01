@@ -1,0 +1,91 @@
+//arduino pin variables
+const int xPin = A0;
+const int yPin = A1;
+const int center = 12;
+const int up = 8;
+const int left = 10;
+const int right = 11;
+const int down = 9;
+
+//values that correspond to the position of the joystick and lit LED
+int upX = 3;
+int upY = 1;
+int downX = 0;
+int downY = 1;
+int leftX = 1;
+int leftY = 0;
+int rightX = 1;
+int rightY = 3;    
+
+void setup() {
+  Serial.begin(9600);
+
+  // set input and output pins
+  pinMode(xPin,INPUT);
+  pinMode(yPin,INPUT);
+
+  pinMode(up, OUTPUT);
+  pinMode(left, OUTPUT);
+  pinMode(right, OUTPUT);
+  pinMode(down, OUTPUT);
+  pinMode(center, OUTPUT);
+
+  randomSeed(3);
+}
+
+void loop() {
+  //start game with welcome message and 2 LED blinks
+  Serial.println("Welcome to Whack-A-Mole! Move the joystick in the direction of the lit up LED.");
+  digitalWrite(center,HIGH);
+  delay(500);
+  digitalWrite(center,LOW);
+  delay(500);
+  digitalWrite(center,HIGH);
+  delay(500);
+  digitalWrite(center, LOW);
+  delay(1000);
+
+  bool flag = false;
+  float time = millis();
+
+  for(int i = 0; i < 21; i++){//iterate through 20 rounds
+    flag = false; //flag to break the while loop for each light turned on
+    int randomLED = random(8,12); // random digtial pin number for up/down/left/right
+
+    while(!flag){//checks the position of the stick mathces the lit up LED
+      
+      int xValue = analogRead(xPin);
+      int yValue = analogRead(yPin);
+
+      //convert the analog input to number between 0-3
+      int x = map(xValue, 0, 1023, 0, 3);
+      int y = map(yValue, 0, 1023, 0, 3);
+      digitalWrite(randomLED,HIGH);
+      
+      if(x == upX && y == upY && randomLED == 8){//Mole is in Up position
+        digitalWrite(randomLED, LOW);
+        flag = true;
+      }
+      if(x == downX && y == downY && randomLED == 9){//Mole is in Down position
+        digitalWrite(randomLED, LOW);
+        flag = true;
+      }
+      if(x == leftX && y == leftY && randomLED == 10){//Mole is in Left position
+        digitalWrite(randomLED, LOW);
+        flag = true;
+      }
+      if(x == rightX && y == rightY && randomLED == 11){//Mole is in Down position
+        digitalWrite(randomLED, LOW);
+        flag = true;
+      }
+    }
+    delay(200);
+  }
+  //take time for how long the round lasted
+  float timer = millis() - time;
+
+  //output statements at end of round
+  Serial.print("Your time is: ");
+  Serial.print(timer / 1000);
+  Serial.println("seconds");
+}
